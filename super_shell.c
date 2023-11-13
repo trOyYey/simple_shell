@@ -7,8 +7,10 @@
 int main(void)
 {
 	int i = 0, stat;
-	size_t Buffer_size;
-	char *Buffer = NULL, *Token, **Array;
+	size_t Buffer_size = 0;
+	char *Buffer = NULL;
+       	char *Token;
+       	char **Array;
 	pid_t sub_proc_pid;
 
 	while (1)
