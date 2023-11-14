@@ -82,33 +82,36 @@ char **get_token(char *input_line)
  * Return: int
  */
 
-int run_execve(char **cmd, char **program)
+int run_execve(char **cmd, char **program, int index)
 {
+	char *all_cmd
 	pid_t child_pid;
 	int status = 0;
 
+	all_cmd = get_path(cmd[0]);
+	if(!all_cmd)
+	{
+		print_error(program[0], cmd[0], index);
+		Mem_free_check(cmd);
+		return(127);
+	}
+	
 	child_pid = fork();
 	if (child_pid == 0)
 	{
-		if (execve(cmd[0], cmd, environ) == -1)
+		if (execve(all_cmd, cmd, environ) == -1)
 		{
 			/* Executable not found */
-			perror(*program);
+			free(all_cmd), all_cmd = NULL;
 			Mem_free_check(cmd);
-			exit(0);
 		}
-	}
-	else if (child_pid > 0)
-	{
-		waitpid(child_pid, &status, 0);
-		Mem_free_check(cmd);
 	}
 	else
 	{
-		dprintf(STDERR_FILENO, "forked failed\n");
-		exit(EXIT_FAILURE);
+		waitpid(child_pid, &status, 0);
+		Mem_free_check(cmd);
+		free(all_cmd), all_cmd = NULL;
 	}
-
 	return(WEXITSTATUS(status));
 }
 
