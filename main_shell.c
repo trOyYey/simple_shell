@@ -11,9 +11,8 @@ int main(int ac, char **argv)
 {
 	char *input_line = NULL;
 	char **cmd = NULL;
-	int i, stat = 0;
+	int  status = 0;
 	(void)ac;
-	(void)argv;
 
 	while (1)
 	{
@@ -22,13 +21,11 @@ int main(int ac, char **argv)
 		{
 			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
-			return (stat);
+			return (status);
 		}
 		cmd = get_token(input_line);
 		if (!cmd)
 			continue;
-
-		for (i = 0; cmd[i]; i++)
-			printf("%s\n", cmd[i]);
+		status = run_execve(cmd, argv);
 	}
 }

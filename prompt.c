@@ -75,3 +75,33 @@ char **get_token(char *input_line)
 	cmd[j] = NULL;
 	return (cmd);
 }
+
+/**
+ * run_execve - function that executes the input
+ * @cmd:
+ * @argv:
+ * Return: int
+ */
+
+int run_execve(char **cmd, char **argv)
+{
+	pid_t child_pid;
+	int status;
+
+	child_pid = fork();
+	if (child_pid == 0)
+	{
+		if (execve(cmd[0], cmd, environ) == -1)
+		{
+			perror(argv[0]);
+			Mem_free_check(cmd);
+			exit(0);
+		}
+	}
+	else
+	{
+		waitpid(child_pid, &status, 0);
+		Mem_free_check(cmd);
+	}
+	return(WEXITSTATUS(status));
+}

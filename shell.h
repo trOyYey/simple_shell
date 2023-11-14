@@ -11,9 +11,12 @@
 #include <errno.h>
 #include <fcntl.h>
 
+extern char **environ;
+
+int run_execve(char **cmd, char **argv);
 char *analyze_line(void);
 char **get_token(char *input_line);
-
+void Mem_free_check(char **cmd);
 char *_strdup(const char *str);
 int _strcmp(char *s1, char *s2);
 int _strlen(char *s);
