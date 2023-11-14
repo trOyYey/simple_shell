@@ -26,9 +26,7 @@ char *read_input(int *status)
 		return (NULL);
 	}
 	else if (n == 1)
-	{
 		*status = 1;
-	}
 
 	return (Buffer);
 }
@@ -39,29 +37,30 @@ char *read_input(int *status)
  * Return:
  */
 
-char **get_token(char *input_line)
+char **get_token(char *input)
 {
 	char *tok, **cmd;
 	const char *delim = " \t\n";
 	int size, i;
 
-	if (!input_line)
+	if (!input)
 		return (NULL);
 
 	/* number of tokens */
-	size = getTokenLength(input_line, delim);
+	size = getTokenLength(input, delim);
 
 	cmd = malloc(sizeof(char *) * (size + 1));
 
 	/* failed allocation of memory */
 	if (!cmd)
 	{
-		free(input_line), input_line = NULL;
+		free(input);
+		input = NULL;
 		return (NULL);
 	}
 
 	/* Store tokens in the vector */
-	tok = strtok(input_line, delim);
+	tok = strtok(input, delim);
 	i = 0;
 	while (tok)
 	{
@@ -69,7 +68,9 @@ char **get_token(char *input_line)
 		tok = strtok(NULL, delim);
 		i++;
 	}
-	free(input_line), input_line = NULL;
+
+	free(input);
+
 	cmd[i] = NULL;
 
 	return (cmd);
