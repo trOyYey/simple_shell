@@ -1,25 +1,34 @@
 #include "shell.h"
 
 /**
- * main - simple shell
- * @ac: counter
- * @av: argument
- * Return: 0
+ * main - main function entry point
+ * @ac: argument count
+ * @argv: arguments
+ * Return:
  */
 
 int main(int ac, char **argv)
 {
 	char *input_line = NULL;
-	char **input_command = NULL;
-	int stat = 0;
+	char **cmd = NULL;
+	int i, stat = 0;
+	(void)ac;
+	(void)argv;
 
 	while (1)
 	{
 		input_line = analyze_line();
-		if (input_line == NULL)  /* EOF */
+		if (input_line == NULL)
 		{
 			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
 			return (stat);
 		}
-		free(input_line);
+		cmd = get_token(input_line);
+		if (!cmd)
+			continue;
+
+		for (i = 0; cmd[i]; i++)
+			printf("%s\n", cmd[i]);
+	}
+}

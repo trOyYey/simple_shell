@@ -8,7 +8,7 @@
  * Return: P
  */
 
-char *_strdup(cont char *string)
+char *_strdup(const char *string)
 {
 	char *P;
 	int i, L = 0;
@@ -20,8 +20,8 @@ char *_strdup(cont char *string)
 		L++;
 		string++;
 	}
-	string = string - len;
-	P = malloc(sizeof(char) * (len + 1));
+	string = string - L;
+	P = malloc(sizeof(char) * (L + 1));
 	if (P == NULL)
 		return (NULL);
 	for (i = 0; i <= L; i++)
