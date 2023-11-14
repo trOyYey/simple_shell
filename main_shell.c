@@ -7,25 +7,38 @@
  * Return:
  */
 
-int main(int ac, char **argv)
+int main(int ac, char **program)
 {
-	char *input_line = NULL;
+	char *input = NULL;
 	char **cmd = NULL;
-	int  status = 0;
-	(void)ac;
+	int status;
+
+
+	(void)ac; /* unused */
 
 	while (1)
 	{
-		input_line = analyze_line();
-		if (input_line == NULL)
+		status = 0;
+		input = read_input(&status);
+
+		/* Handles enter key */
+		if (status == 1)
+		{
+			free(input);
+			continue;
+		}
+
+		if (input == NULL)
 		{
 			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
 			return (status);
 		}
-		cmd = get_token(input_line);
+
+		cmd = get_token(input);
 		if (!cmd)
 			continue;
-		status = run_execve(cmd, argv);
+
+		status = run_execve(cmd, program);
 	}
 }

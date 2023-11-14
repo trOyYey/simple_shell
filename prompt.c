@@ -8,20 +8,28 @@
  * Return: Buffer
  */
 
-char *analyze_line(void)
+char *read_input(int *status)
 {
 	char *Buffer = NULL;
 	size_t size = 0;
 	ssize_t n;
-	
+
+	/* Non interactive mode */
 	if (isatty(STDIN_FILENO))
-	write(STDOUT_FILENO, "#cisfun$ ", 9);
+		write(STDOUT_FILENO, "#cisfun$ ", 9);
+
 	n = getline(&Buffer, &size, stdin);
+
 	if ( n == -1)
 	{
 		free(Buffer);
 		return (NULL);
 	}
+	else if (n == 1)
+	{
+		*status = 1;
+	}
+
 	return (Buffer);
 }
 
@@ -33,46 +41,37 @@ char *analyze_line(void)
 
 char **get_token(char *input_line)
 {
-	char *tok = NULL,*cpy = NULL, delim[] = " \t\n";
-	char **cmd = NULL;
-	int i = 0, j = 0;
+	char *tok, **cmd;
+	const char *delim = " \t\n";
+	int size, i;
 
 	if (!input_line)
 		return (NULL);
 
-	cpy = _strdup(input_line);
+	/* number of tokens */
+	size = getTokenLength(input_line, delim);
 
-	tok = strtok(cpy, delim);
-	if (tok == NULL)
-	{
-		free(input_line), input_line = NULL;
-		free(cpy), cpy = NULL;
-		return (NULL);
-	}
+	cmd = malloc(sizeof(char *) * (size + 1));
 
-	while (tok)
-	{
-		i++;
-		tok = strtok(NULL, delim);
-	}
-	free(cpy), cpy = NULL;
-
-	cmd = malloc(sizeof(char *) * (i + 1));
+	/* failed allocation of memory */
 	if (!cmd)
 	{
 		free(input_line), input_line = NULL;
 		return (NULL);
 	}
 
+	/* Store tokens in the vector */
 	tok = strtok(input_line, delim);
+	i = 0;
 	while (tok)
 	{
-		cmd[j] = _strdup(tok);
+		cmd[i] = _strdup(tok);
 		tok = strtok(NULL, delim);
-		j++;
+		i++;
 	}
 	free(input_line), input_line = NULL;
-	cmd[j] = NULL;
+	cmd[i] = NULL;
+
 	return (cmd);
 }
 
@@ -83,25 +82,58 @@ char **get_token(char *input_line)
  * Return: int
  */
 
-int run_execve(char **cmd, char **argv)
+int run_execve(char **cmd, char **program)
 {
 	pid_t child_pid;
-	int status;
+	int status = 0;
 
 	child_pid = fork();
 	if (child_pid == 0)
 	{
 		if (execve(cmd[0], cmd, environ) == -1)
 		{
-			perror(argv[0]);
+			/* Executable not found */
+			perror(*program);
 			Mem_free_check(cmd);
 			exit(0);
 		}
 	}
-	else
+	else if (child_pid > 0)
 	{
 		waitpid(child_pid, &status, 0);
 		Mem_free_check(cmd);
 	}
+	else
+	{
+		dprintf(STDERR_FILENO, "forked failed\n");
+		exit(EXIT_FAILURE);
+	}
+
 	return(WEXITSTATUS(status));
+}
+
+int getTokenLength(char *input_line, const char *delim)
+{
+	int i;
+	char *currentToken;
+
+	char *copied = strdup(input_line);
+	i = 0;
+	currentToken = strtok(copied, delim);
+
+	if (currentToken == NULL)
+	{
+		free(input_line);
+		free(copied);
+	}
+
+	i++;
+	while (currentToken)
+	{
+		currentToken = strtok(NULL, delim);
+		i++;
+	}
+
+	free(copied);
+	return (i);
 }
