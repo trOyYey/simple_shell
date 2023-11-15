@@ -1,13 +1,12 @@
 #include "shell.h"
 
 /**
- * analyze_line - function that reads throught the input
- * @Buffer: buffer
- * @N: ssize_t
- * @size: size of buffer
+ * read_input - function that reads throught the input
+ *
+ * @status: updates when enter key is entered
+ *
  * Return: Buffer
  */
-
 char *read_input(int *status)
 {
 	char *Buffer = NULL;
@@ -20,7 +19,7 @@ char *read_input(int *status)
 
 	n = getline(&Buffer, &size, stdin);
 
-	if ( n == -1)
+	if (n == -1)
 	{
 		free(Buffer);
 		return (NULL);
@@ -33,10 +32,11 @@ char *read_input(int *status)
 
 /**
  * **get_token - function that tokenize string
- * @input_line: string
- * Return:
+ *
+ * @input: string
+ *
+ * Return: Arrays of tokens
  */
-
 char **get_token(char *input)
 {
 	char *tok, **cmd;
@@ -78,9 +78,11 @@ char **get_token(char *input)
 
 /**
  * run_execve - function that executes the input
- * @cmd:
- * @argv:
- * Return: int
+ *
+ * @cmd: tokenized commands
+ * @program: Name of the program
+ *
+ * Return: status
  */
 
 int run_execve(char **cmd, char **program)
@@ -110,31 +112,40 @@ int run_execve(char **cmd, char **program)
 		exit(EXIT_FAILURE);
 	}
 
-	return(WEXITSTATUS(status));
+	return (WEXITSTATUS(status));
 }
 
-int getTokenLength(char *input_line, const char *delim)
+/**
+ * getTokenLength - Number of tokens that can be retrieved
+ * from an input
+ *
+ * @input: input
+ * @delim: delimeter
+ *
+ * Return: count
+ */
+int getTokenLength(char *input, const char *delim)
 {
-	int i;
+	int count;
 	char *currentToken;
+	char *copied = strdup(input);
 
-	char *copied = strdup(input_line);
-	i = 0;
+	count = 0;
 	currentToken = strtok(copied, delim);
 
 	if (currentToken == NULL)
 	{
-		free(input_line);
+		free(input);
 		free(copied);
 	}
 
-	i++;
+	count++;
 	while (currentToken)
 	{
 		currentToken = strtok(NULL, delim);
-		i++;
+		count++;
 	}
 
 	free(copied);
-	return (i);
+	return (count);
 }

@@ -1,13 +1,12 @@
 #include "shell.h"
 
 /**
- * *_STRDUP - function that duplicates string with allocated memory
- * @P: pointer
- * @i: int
- * @L: lenght of string
- * Return: P
+ * _strdup - function that duplicates string with allocated memory
+ *
+ * @string: The string to duplicate
+ *
+ * Return: A pointer to the duplicate string
  */
-
 char *_strdup(const char *string)
 {
 	char *P;
@@ -26,13 +25,16 @@ char *_strdup(const char *string)
 		return (NULL);
 	for (i = 0; i <= L; i++)
 		P[i] = string[i];
+
 	return (P);
 }
 
 /**
  * _strcmp - function that compares two strings
+ *
  * @s1: first input
  * @s2: 2nd input
+ *
  * Return: 1 if true, 0 if false
  */
 
@@ -55,10 +57,11 @@ int _strcmp(char *s1, char *s2)
 
 /**
  * _strlen - function that returns lenght of a string
+ *
  *@s : input
-* Return: lenght of string
-*/
-
+ *
+ * Return: Length of the string
+ */
 int _strlen(char *s)
 {
 	int counter;
@@ -75,7 +78,6 @@ int _strlen(char *s)
  * @src: source pointer
  * Return: pointer resulting of @dest
  */
-
 char *_strcat(char *dest, char *src)
 {
 	int destL = 0;
@@ -94,13 +96,13 @@ char *_strcat(char *dest, char *src)
 }
 
 /**
- * *_strcpy - function that copies the string pointed by
-*				src
-*@dest: input buffer
-*@src: pointed string input
- *Return: pointer to dest
+ * _strcpy - function that copies a string from @dest to @src
+ *
+ * @dest: The destination to copy to
+ * @src: The source to copy from
+ *
+ * Return: pointer to @dest
  */
-
 char *_strcpy(char *dest, char *src)
 {
 	int i = -1;
