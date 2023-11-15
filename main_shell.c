@@ -8,7 +8,6 @@
  *
  * Return: 0 (Success)
  */
-
 int main(int ac, char **program)
 {
 	char *input = NULL, **cmd = NULL;
@@ -31,12 +30,9 @@ int main(int ac, char **program)
 		if (!cmd)
 			continue;
 
-		status = run_builtin(cmd); /* executes builtin command */
-
-		 /*error with builtin commands*/
-		 if (error(status, *program) == status)
-			continue;
-
-		status = run_execve(cmd, *program, index); /* execute external program */ 
+		if (isBuiltin(*cmd))
+			run_builtin(cmd, *program, index); /* executes builtin command */
+		else
+			status = run_execve(cmd, *program, index); /* execute external program */
 	}
 }

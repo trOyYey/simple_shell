@@ -25,7 +25,7 @@ extern char **environ;
 typedef struct Command
 {
 	char *name;
-	int (*exec_builtin)(char *arg[]);
+	int (*exec_builtin)(char *[], char *, int);
 
 } Command;
 
@@ -45,19 +45,17 @@ char *_strcpy(char *, char *);
 
 int getTokenLength(char *, const char *);
 
-int exit_command(char *[]);
-int env_command(char *[]);
+int exit_command(char *[], char *, int);
 
-int run_builtin(char **);
+int env_command(char *[], char *, int);
+
+int run_builtin(char **, char *, int);
 
 int _atoi(char *);
-
-int error(int status, char *program);
 
 int run_execve(char **, char *, int);
 
 char *read_input(void);
-
 
 char **get_token(char *input_line);
 
@@ -75,4 +73,9 @@ char *_itoa(int N);
 char *get_path(char *cmd);
 char *_getenv(char *var);
 
+int getNumLength(int number);
+
+int isBuiltin(const char *);
+
+char *toString(int);
 #endif
