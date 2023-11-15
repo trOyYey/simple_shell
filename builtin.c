@@ -11,7 +11,7 @@
  */
 int exit_command(char *cmd[])
 {
-	int argCount, i;
+	int argCount, i, status;
 	const int length = 6;
 
 	argCount = 0;
@@ -28,12 +28,15 @@ int exit_command(char *cmd[])
 	/* Contains exit status */
 	if (cmd[1] != NULL)
 	{
+		status = _atoi(cmd[1]);
+		Mem_free_check(cmd);
 		write(1, "exit\n", length);
-		exit(_atoi(cmd[1]));
+		exit(status);
 	}
 
 	/* does not contain status */
 	write(1, "exit\n", length);
+	Mem_free_check(cmd);
 	exit(EXIT_SUCCESS);
 }
 
@@ -53,6 +56,7 @@ int run_builtin(char **cmd)
 	/* map command name to it function */
 	Command builtin_command[] = {
 		{"exit", exit_command},
+		{"env", env_command},
 		{NULL, NULL}
 	};
 
@@ -95,4 +99,16 @@ int error(int status, char *program)
 	}
 
 	return (1); /* Base status */
+}
+
+int env_command(char **cmd)
+{
+	int i;
+	for (i = 0; environ[i]; i++)
+	{
+		write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
+		write(STDOUT_FILENO, "\n", 1);
+	}
+	Mem_free_check(cmd);
+	return (0);
 }

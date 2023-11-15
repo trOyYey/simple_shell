@@ -46,6 +46,7 @@ char *_strcpy(char *, char *);
 int getTokenLength(char *, const char *);
 
 int exit_command(char *[]);
+int env_command(char *[]);
 
 int run_builtin(char **);
 

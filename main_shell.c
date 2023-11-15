@@ -33,10 +33,10 @@ int main(int ac, char **program)
 
 		status = run_builtin(cmd); /* executes builtin command */
 
-		/* error with builtin commands */
-		if (error(status, *program) == status)
+		 /*error with builtin commands*/
+		 if (error(status, *program) == status)
 			continue;
 
-		status = run_execve(cmd, *program, index); /* execute external program */
+		status = run_execve(cmd, *program, index); /* execute external program */ 
 	}
 }
