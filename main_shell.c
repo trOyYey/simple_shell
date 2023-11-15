@@ -11,7 +11,7 @@ int main(int ac, char **program)
 {
 	char *input = NULL;
 	char **cmd = NULL;
-	int status;
+	int status = 0, index = 0;
 
 
 	(void)ac; /* unused */
@@ -34,7 +34,7 @@ int main(int ac, char **program)
 				write(STDOUT_FILENO, "\n", 1);
 			return (status);
 		}
-
+		index++;
 		cmd = get_token(input);
 		if (!cmd)
 			continue;
