@@ -1,6 +1,5 @@
 #include "shell.h"
 
-
 /**
  * exit_command - exit builtin command
  *
@@ -11,46 +10,42 @@
  * Return: exit status if the function fails
  * otherwise exit
  */
-int exit_command(char *cmd[], char *program, int index)
+int exit_command(char *cmd[], const char *program, int index)
 {
-	int number;
-	const int length = 6;
 	/* Contains exit status */
 	if (cmd[1])
 	{
-		number = _atoi(cmd[1]);
-		if (number < 0)
+		int number = _atoi(cmd[1]);
+
+		if (notValid(cmd[1]) && number)
 		{
 			/* failed */
-			char *message = "Illegal number";
-			char *str;
+			/* char *message = "Illegal number"; */
+			/* char *str; */
 
-			write(STDOUT_FILENO, program, strlen(program));
-			str = toString(index); /* convert to string */
+			printf("%s: %d: exit: Illegal number: %s\n", program, index, cmd[1]);
+			/* write(STDOUT_FILENO, program, strlen(program)); */
+			/* str = toString(index); /\* convert to string *\/ */
 
-			write(STDOUT_FILENO, ": ", 2);
-			write(STDOUT_FILENO, str, strlen(str));
-			free(str);
+			/* write(STDOUT_FILENO, ": ", 2); */
+			/* write(STDOUT_FILENO, str, strlen(str)); */
+			/* free(str); */
 
-			write(STDOUT_FILENO, ": exit: ", 8);
-			write(STDOUT_FILENO, message, strlen(message));
+			/* write(STDOUT_FILENO, ": exit: ", 8); */
+			/* write(STDOUT_FILENO, message, strlen(message)); */
 
-			write(STDOUT_FILENO, ": ", 2);
-			str = toString(number); /* convert to string */
+			/* write(STDOUT_FILENO, ": ", 2); */
 
-			write(STDOUT_FILENO, str, strlen(str));
-			write(STDOUT_FILENO, "\n", 1);
+			/* write(STDOUT_FILENO, cmd[1], strlen(cmd[1])); */
+			/* write(STDOUT_FILENO, "\n", 1); */
 
-			free(str);
 			Mem_free_check(cmd);
-			return (number);
+			return (EXIT_FAILURE);
 		}
 		Mem_free_check(cmd);
-		write(1, "exit\n", length);
 		exit(number);
 	}
 	/* does not contain status */
-	write(1, "exit\n", length);
 	Mem_free_check(cmd);
 	exit(EXIT_SUCCESS);
 }
@@ -66,7 +61,7 @@ int exit_command(char *cmd[], char *program, int index)
  * Return: executes the builtin, 0 if commands
  * entered does not match any builtin specified
  */
-int run_builtin(char **cmd, char *program, int index)
+int run_builtin(char **cmd, const char *program, int index)
 {
 	int i, status;
 
@@ -80,7 +75,7 @@ int run_builtin(char **cmd, char *program, int index)
 	i = 0;
 	while (builtin_command[i].name != NULL)
 	{
-		if (strcmp(cmd[0], builtin_command[i].name) == 0)
+		if (strcmp(*cmd, builtin_command[i].name) == 0)
 		{
 			status = builtin_command[i].exec_builtin(cmd, program, index);
 			return (status);
@@ -99,7 +94,7 @@ int run_builtin(char **cmd, char *program, int index)
  *
  * Return: always 0
  */
-int env_command(char **cmd, char *program, int index)
+int env_command(char **cmd, const char *program, int index)
 {
 	int i;
 

@@ -25,7 +25,7 @@ extern char **environ;
 typedef struct Command
 {
 	char *name;
-	int (*exec_builtin)(char *[], char *, int);
+	int (*exec_builtin)(char *[], const char *, int);
 
 } Command;
 
@@ -45,11 +45,11 @@ char *_strcpy(char *, char *);
 
 int getTokenLength(char *, const char *);
 
-int exit_command(char *[], char *, int);
+int exit_command(char *[], const char *, int);
 
-int env_command(char *[], char *, int);
+int env_command(char *[], const char *, int);
 
-int run_builtin(char **, char *, int);
+int run_builtin(char **, const char *, int);
 
 int _atoi(char *);
 
@@ -77,5 +77,7 @@ int getNumLength(int number);
 
 int isBuiltin(const char *);
 
+
+int notValid(const char *);
 char *toString(int);
 #endif

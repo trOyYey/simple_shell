@@ -72,3 +72,27 @@ char *toString(int number)
 
 	return (num);
 }
+
+/**
+ * notValid - Checks if the exit status entered contains
+ * natural numbers
+ *
+ * @status: The status entered
+ *
+ * Return: 1 if status is not a natural number otherwise 0
+ */
+int notValid(const char *status)
+{
+	int i;
+
+	i = 0;
+	while (status[i])
+	{
+		if (!(status[i] >= '0' && status[i] <= '9'))
+			return (1);
+		i++;
+
+	}
+
+	return (0);
+}
