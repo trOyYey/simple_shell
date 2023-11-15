@@ -9,8 +9,7 @@
 
 int main(int ac, char **argv)
 {
-	char *input = NULL;
-	char **cmd = NULL;
+	char *input = NULL, **cmd = NULL;
 	int status = 0, index = 0;
 
 
@@ -18,16 +17,7 @@ int main(int ac, char **argv)
 
 	while (1)
 	{
-		status = 0;
-		input = read_input(&status);
-
-		/* Handles enter key */
-		if (status == 1)
-		{
-			free(input);
-			continue;
-		}
-
+		input = read_input();
 		if (input == NULL)
 		{
 			if (isatty(STDIN_FILENO))

@@ -8,7 +8,7 @@
  * Return: Buffer
  */
 
-char *read_input(int *status)
+char *read_input(void)
 {
 	char *Buffer = NULL;
 	size_t size = 0;
@@ -22,14 +22,9 @@ char *read_input(int *status)
 
 	if ( n == -1)
 	{
-		free(Buffer);
+		free(Buffer), Buffer = NULL;
 		return (NULL);
 	}
-	else if (n == 1)
-	{
-		*status = 1;
-	}
-
 	return (Buffer);
 }
 
@@ -41,37 +36,46 @@ char *read_input(int *status)
 
 char **get_token(char *input_line)
 {
-	char *tok, **cmd;
-	const char *delim = " \t\n";
-	int size, i;
+	char *tok = NULL,*cpy = NULL, delim[] = " \t\n";
+	char **cmd = NULL;
+	int i = 0, j = 0;
 
 	if (!input_line)
 		return (NULL);
 
-	/* number of tokens */
-	size = getTokenLength(input_line, delim);
+	cpy = _strdup(input_line);
 
-	cmd = malloc(sizeof(char *) * (size + 1));
+	tok = strtok(cpy, delim);
+	if (tok == NULL)
+	{
+		free(input_line), input_line = NULL;
+		free(cpy), cpy = NULL;
+		return (NULL);
+	}
 
-	/* failed allocation of memory */
+	while (tok)
+	{
+		i++;
+		tok = strtok(NULL, delim);
+	}
+	free(cpy), cpy = NULL;
+
+	cmd = malloc(sizeof(char *) * (i + 1));
 	if (!cmd)
 	{
 		free(input_line), input_line = NULL;
 		return (NULL);
 	}
 
-	/* Store tokens in the vector */
 	tok = strtok(input_line, delim);
-	i = 0;
 	while (tok)
 	{
-		cmd[i] = _strdup(tok);
+		cmd[j] = _strdup(tok);
 		tok = strtok(NULL, delim);
-		i++;
+		j++;
 	}
 	free(input_line), input_line = NULL;
-	cmd[i] = NULL;
-
+	cmd[j] = NULL;
 	return (cmd);
 }
 
@@ -115,28 +119,3 @@ int run_execve(char **cmd, char **argv, int index)
 	return(WEXITSTATUS(status));
 }
 
-int getTokenLength(char *input_line, const char *delim)
-{
-	int i;
-	char *currentToken;
-
-	char *copied = strdup(input_line);
-	i = 0;
-	currentToken = strtok(copied, delim);
-
-	if (currentToken == NULL)
-	{
-		free(input_line);
-		free(copied);
-	}
-
-	i++;
-	while (currentToken)
-	{
-		currentToken = strtok(NULL, delim);
-		i++;
-	}
-
-	free(copied);
-	return (i);
-}

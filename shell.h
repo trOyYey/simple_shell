@@ -14,7 +14,7 @@
 extern char **environ;
 
 int run_execve(char **cmd, char **argv, int index);
-char *read_input(int *status);
+char *read_input(void);
 char **get_token(char *input_line);
 void Mem_free_check(char **cmd);
 char *_strdup(const char *str);
