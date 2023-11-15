@@ -7,7 +7,7 @@
  * Return:
  */
 
-int main(int ac, char **program)
+int main(int ac, char **argv)
 {
 	char *input = NULL;
 	char **cmd = NULL;
@@ -39,6 +39,6 @@ int main(int ac, char **program)
 		if (!cmd)
 			continue;
 
-		status = run_execve(cmd, program);
+		status = run_execve(cmd, argv, index);
 	}
 }

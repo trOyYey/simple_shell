@@ -82,16 +82,16 @@ char **get_token(char *input_line)
  * Return: int
  */
 
-int run_execve(char **cmd, char **program, int index)
+int run_execve(char **cmd, char **argv, int index)
 {
-	char *all_cmd
+	char *all_cmd;
 	pid_t child_pid;
 	int status = 0;
 
 	all_cmd = get_path(cmd[0]);
 	if(!all_cmd)
 	{
-		print_error(program[0], cmd[0], index);
+		print_error(argv[0], cmd[0], index);
 		Mem_free_check(cmd);
 		return(127);
 	}

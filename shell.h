@@ -13,7 +13,7 @@
 
 extern char **environ;
 
-int run_execve(char **cmd, char **argv);
+int run_execve(char **cmd, char **argv, int index);
 char *read_input(int *status);
 char **get_token(char *input_line);
 void Mem_free_check(char **cmd);
