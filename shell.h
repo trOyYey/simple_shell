@@ -29,10 +29,6 @@ typedef struct Command
 
 } Command;
 
-int run_execve(char **, char **);
-
-char *read_input(int *);
-
 char **get_token(char *);
 
 void Mem_free_check(char **);
@@ -56,12 +52,14 @@ int run_builtin(char **);
 int _atoi(char *);
 
 int error(int status, char *program);
-=======
-int run_execve(char **cmd, char **argv, int index);
+
+int run_execve(char **, char *, int);
 
 char *read_input(void);
 
+
 char **get_token(char *input_line);
+
 void Mem_free_check(char **cmd);
 char *_strdup(const char *str);
 int _strcmp(char *s1, char *s2);
@@ -75,7 +73,5 @@ void string_reverse(char *s, int l);
 char *_itoa(int N);
 char *get_path(char *cmd);
 char *_getenv(char *var);
-
-int getTokenLength(char *input_line, const char *delim);
 
 #endif
