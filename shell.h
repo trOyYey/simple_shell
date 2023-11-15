@@ -1,7 +1,9 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+/* System header */
 #include <string.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -13,35 +15,46 @@
 
 extern char **environ;
 
-typedef struct
+/**
+ * struct Command - A structure that maps
+ * commands to it respective function implemntations
+ *
+ * @name: The name of the command (key)
+ * @exec_builtin: The name of the function (value)
+ */
+typedef struct Command
 {
 	char *name;
 	int (*exec_builtin)(char *arg[]);
 
-}Command;
+} Command;
 
-int run_execve(char **cmd, char **argv);
+int run_execve(char **, char **);
 
-char *read_input(int *status);
+char *read_input(int *);
 
-char **get_token(char *input_line);
+char **get_token(char *);
 
-void Mem_free_check(char **cmd);
+void Mem_free_check(char **);
 
-char *_strdup(const char *str);
+char *_strdup(const char *);
 
-int _strcmp(char *s1, char *s2);
+int _strcmp(char *, char *);
 
-int _strlen(char *s);
+int _strlen(char *);
 
-char *_strcat(char *dest, char *src);
+char *_strcat(char *, char *);
 
-char *_strcpy(char *dest, char *src);
+char *_strcpy(char *, char *);
 
-int getTokenLength(char *input_line, const char *delim);
+int getTokenLength(char *, const char *);
 
-int exit_command(char *arg[]);
+int exit_command(char *[]);
 
-int run_builtin(char **cmd);
+int run_builtin(char **);
+
+int _atoi(char *);
+
+int error(int status, char *program);
 
 #endif
