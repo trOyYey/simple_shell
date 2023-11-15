@@ -3,11 +3,9 @@
 /**
  * read_input - function that reads throught the input
  *
- * @status: updates when enter key is entered
- *
  * Return: Buffer
  */
-char *read_input(int *status)
+char *read_input(void)
 {
 	char *Buffer = NULL;
 	size_t size = 0;
@@ -22,10 +20,9 @@ char *read_input(int *status)
 	if (n == -1)
 	{
 		free(Buffer);
+		Buffer = NULL;
 		return (NULL);
 	}
-	else if (n == 1)
-		*status = 1;
 
 	return (Buffer);
 }
@@ -39,40 +36,45 @@ char *read_input(int *status)
  */
 char **get_token(char *input)
 {
-	char *tok, **cmd;
-	const char *delim = " \t\n";
-	int size, i;
+	const char *tok = NULL, *delim = " \t\n";
+	char *cpy, **cmd;
+	int i = 0, j = 0;
 
 	if (!input)
 		return (NULL);
+	cpy = _strdup(input);
 
-	/* number of tokens */
-	size = getTokenLength(input, delim);
-
-	cmd = malloc(sizeof(char *) * (size + 1));
-
-	/* failed allocation of memory */
-	if (!cmd)
+	tok = strtok(cpy, delim);
+	if (tok == NULL)
 	{
 		free(input);
-		input = NULL;
+		free(cpy);
+		cpy = NULL;
 		return (NULL);
 	}
 
-	/* Store tokens in the vector */
-	tok = strtok(input, delim);
-	i = 0;
 	while (tok)
 	{
-		cmd[i] = _strdup(tok);
-		tok = strtok(NULL, delim);
 		i++;
+		tok = strtok(NULL, delim);
 	}
+	free(cpy);
 
-	free(input);
-
-	cmd[i] = NULL;
-
+	cmd = malloc(sizeof(char *) * (i + 1));
+	if (!cmd)
+	{
+		free(input), input = NULL;
+		return (NULL);
+	}
+	tok = strtok(input, delim);
+	while (tok)
+	{
+		cmd[j] = _strdup(tok);
+		tok = strtok(NULL, delim);
+		j++;
+	}
+	free(input), input = NULL;
+	cmd[j] = NULL;
 	return (cmd);
 }
 
@@ -81,35 +83,40 @@ char **get_token(char *input)
  *
  * @cmd: tokenized commands
  * @program: Name of the program
+ * @index: index of the command passed
  *
  * Return: status
  */
 
-int run_execve(char **cmd, char **program)
+int run_execve(char **cmd, char *program, int index)
 {
+	char *all_cmd;
 	pid_t child_pid;
 	int status = 0;
+
+	all_cmd = get_path(cmd[0]);
+	if (!all_cmd)
+	{
+		print_error(program, cmd[0], index);
+		Mem_free_check(cmd);
+		return (127);
+	}
 
 	child_pid = fork();
 	if (child_pid == 0)
 	{
-		if (execve(cmd[0], cmd, environ) == -1)
+		if (execve(all_cmd, cmd, environ) == -1)
 		{
 			/* Executable not found */
-			perror(*program);
+			free(all_cmd), all_cmd = NULL;
 			Mem_free_check(cmd);
-			exit(0);
 		}
-	}
-	else if (child_pid > 0)
-	{
-		waitpid(child_pid, &status, 0);
-		Mem_free_check(cmd);
 	}
 	else
 	{
-		dprintf(STDERR_FILENO, "forked failed\n");
-		exit(EXIT_FAILURE);
+		waitpid(child_pid, &status, 0);
+		Mem_free_check(cmd);
+		free(all_cmd), all_cmd = NULL;
 	}
 
 	return (WEXITSTATUS(status));

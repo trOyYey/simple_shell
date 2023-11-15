@@ -1,6 +1,5 @@
 #include "shell.h"
 
-
 /**
  * main - main function entry point
  *
@@ -12,24 +11,14 @@
 
 int main(int ac, char **program)
 {
-	char *input = NULL;
-	char **cmd = NULL;
+	char *input = NULL, **cmd = NULL;
+	int status = 0, index = 0;
 
 	(void)ac; /* unused */
 
 	while (true)
 	{
-		int status = 0;
-
-		input = read_input(&status);
-
-		/* Handles enter key */
-		if (status == 1)
-		{
-			free(input);
-			continue;
-		}
-
+		input = read_input();
 		if (input == NULL)
 		{
 			/* handle non interactive mode and EOF condition */
@@ -37,7 +26,7 @@ int main(int ac, char **program)
 				write(STDOUT_FILENO, "\n", 1);
 			return (status);
 		}
-
+		index++;
 		cmd = get_token(input);
 		if (!cmd)
 			continue;
@@ -48,6 +37,6 @@ int main(int ac, char **program)
 		if (error(status, *program) == status)
 			continue;
 
-		status = run_execve(cmd, program); /* executus external programs */
+		status = run_execve(cmd, *program, index); /* execute external program */
 	}
 }
