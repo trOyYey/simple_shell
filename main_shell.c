@@ -1,29 +1,26 @@
 #include "shell.h"
 
-Command builtin_command[] =
-{
-	{"exit", exit_command},
-	{NULL, NULL}
-};
 
 /**
  * main - main function entry point
+ *
  * @ac: argument count
- * @argv: arguments
- * Return:
+ * @program: program name
+ *
+ * Return: 0 (Success)
  */
 
 int main(int ac, char **program)
 {
 	char *input = NULL;
 	char **cmd = NULL;
-	int status;
 
 	(void)ac; /* unused */
 
-	while (1)
+	while (true)
 	{
-		status = 0;
+		int status = 0;
+
 		input = read_input(&status);
 
 		/* Handles enter key */
@@ -35,43 +32,22 @@ int main(int ac, char **program)
 
 		if (input == NULL)
 		{
+			/* handle non interactive mode and EOF condition */
 			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
 			return (status);
 		}
 
 		cmd = get_token(input);
-		input = NULL;
-
 		if (!cmd)
 			continue;
 
-		run_builtin(cmd);
+		status = run_builtin(cmd); /* executes builtin command */
 
-		status = run_execve(cmd, program);
+		/* error with builtin commands */
+		if (error(status, *program) == status)
+			continue;
+
+		status = run_execve(cmd, program); /* executus external programs */
 	}
-}
-
-int exit_command(char *arg[])
-{
-	(void)arg;
-
-	write(1, "exit\n", 6);
-	exit(EXIT_SUCCESS);
-}
-
-int run_builtin(char **cmd)
-{
-	int i;
-
-	i = 0;
-	while (builtin_command[i].name != NULL)
-	{
-		if (strcmp(cmd[0], builtin_command[i].name) == 0)
-			builtin_command[i].exec_builtin(cmd);
-
-		i++;
-	}
-
-	return (0);
 }
