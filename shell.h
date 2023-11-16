@@ -15,6 +15,8 @@
 
 extern char **environ;
 
+enum constant { exit_code = 5 };
+
 /**
  * struct Command - A structure that maps
  * commands to it respective function implemntations
@@ -49,7 +51,7 @@ int exit_command(char *[], const char *, int);
 
 int env_command(char *[], const char *, int);
 
-int run_builtin(char **, const char *, int);
+int run_builtin(char **, const char *, int, int);
 
 int _atoi(char *);
 
@@ -80,4 +82,6 @@ int isBuiltin(const char *);
 
 int notValid(const char *);
 char *toString(int);
+
+void handle_exit_status(char **, int, int);
 #endif

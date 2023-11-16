@@ -20,17 +20,17 @@ int exit_command(char *cmd[], const char *program, int index)
 		if (notValid(cmd[1]))
 		{
 			/* exit failed */
-			dprintf(STDERR_FILENO, "%s: %d: exit: Illegal number: %s\n", program, index, cmd[1]);
+			dprintf(STDERR_FILENO, "%s: %d: exit: Illegal number: %s\n",
+				program, index, cmd[1]);
 
 			Mem_free_check(cmd);
-			return (EXIT_FAILURE);
+			return (127);
 		}
 		Mem_free_check(cmd);
 		exit(number);
 	}
 	/* does not contain status */
-	Mem_free_check(cmd);
-	exit(EXIT_SUCCESS);
+	return (exit_code);
 }
 
 /**
@@ -40,13 +40,14 @@ int exit_command(char *cmd[], const char *program, int index)
  * @cmd: Tokenized commands
  * @program: Name of the program
  * @index: Index of the current command executed
+ * @externalStatus: Status of an external program
  *
  * Return: executes the builtin, 0 if commands
  * entered does not match any builtin specified
  */
-int run_builtin(char **cmd, const char *program, int index)
+int run_builtin(char **cmd, const char *program, int index, int externalStatus)
 {
-	int i, status;
+	int i, builtinStatus;
 
 	/* map command name to it function */
 	Command builtin_command[] = {
@@ -60,8 +61,10 @@ int run_builtin(char **cmd, const char *program, int index)
 	{
 		if (strcmp(*cmd, builtin_command[i].name) == 0)
 		{
-			status = builtin_command[i].exec_builtin(cmd, program, index);
-			return (status);
+			builtinStatus = builtin_command[i].exec_builtin(cmd, program, index);
+			handle_exit_status(cmd, externalStatus, builtinStatus);
+
+			return (builtinStatus);
 		}
 		i++;
 	}
@@ -91,29 +94,5 @@ int env_command(char **cmd, const char *program, int index)
 		write(STDOUT_FILENO, "\n", 1);
 	}
 	Mem_free_check(cmd);
-	return (0);
-}
-
-/**
- * isBuiltin - Checks if a command is belongs
- * to the specified shell builtin commands
- *
- * @command: Command to check
- *
- * Return: 1 if the commands is found, 0 otherwise
- */
-int isBuiltin(const char *command)
-{
-	int i;
-	const char *builtin_cmd[] = {"exit", "env", NULL};
-
-	i = 0;
-	while (builtin_cmd[i])
-	{
-		if (!strcmp(builtin_cmd[i], command))
-			return (1);
-		i++;
-	}
-
 	return (0);
 }

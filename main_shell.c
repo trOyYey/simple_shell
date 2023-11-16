@@ -31,7 +31,8 @@ int main(int ac, char **program)
 			continue;
 
 		if (isBuiltin(*cmd))
-			run_builtin(cmd, *program, index); /* executes builtin command */
+			/* executes builtin command */
+			status = run_builtin(cmd, *program, index, status);
 		else
 			status = run_execve(cmd, *program, index); /* execute external program */
 	}

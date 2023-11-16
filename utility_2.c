@@ -101,3 +101,54 @@ int notValid(const char *status)
 
 	return (0);
 }
+
+/**
+ * handle_exit_status - Handles the exit of status between
+ * external program, and builtin
+ *
+ * @cmd: The tokenized commands
+ * @externalStatus: Status of an external programs
+ * @builtinStatus: Status of the builtin programs
+ *
+ * Return: void (Nothing)
+ */
+void handle_exit_status(char **cmd, int externalStatus, int builtinStatus)
+{
+		/* Handled external status exit */
+		if (externalStatus > 0 && !strcmp(*cmd, "exit"))
+		{
+			Mem_free_check(cmd);
+			exit(externalStatus);
+		}
+
+		/* Handle shell builtin status exit */
+		if (builtinStatus == 5 && !strcmp(*cmd, "exit"))
+		{
+			Mem_free_check(cmd);
+			exit(0);
+		}
+}
+
+/**
+ * isBuiltin - Checks if a command is belongs
+ * to the specified shell builtin commands
+ *
+ * @command: Command to check
+ *
+ * Return: 1 if the commands is found, 0 otherwise
+ */
+int isBuiltin(const char *command)
+{
+	int i;
+	const char *builtin_cmd[] = {"exit", "env", NULL};
+
+	i = 0;
+	while (builtin_cmd[i])
+	{
+		if (!strcmp(builtin_cmd[i], command))
+			return (1);
+		i++;
+	}
+
+	return (0);
+}
