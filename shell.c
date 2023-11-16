@@ -44,7 +44,7 @@ char **get_token(char *input)
 		return (NULL);
 	cpy = _strdup(input);
 
-	tok = strtok(cpy, delim);
+	tok = c_strtok(cpy, delim);
 	if (tok == NULL)
 	{
 		free(input);
@@ -56,7 +56,7 @@ char **get_token(char *input)
 	while (tok)
 	{
 		i++;
-		tok = strtok(NULL, delim);
+		tok = c_strtok(NULL, delim);
 	}
 	free(cpy);
 
@@ -66,11 +66,11 @@ char **get_token(char *input)
 		free(input), input = NULL;
 		return (NULL);
 	}
-	tok = strtok(input, delim);
+	tok = c_strtok(input, delim);
 	while (tok)
 	{
 		cmd[j] = _strdup(tok);
-		tok = strtok(NULL, delim);
+		tok = c_strtok(NULL, delim);
 		j++;
 	}
 	free(input), input = NULL;
