@@ -75,7 +75,7 @@ char *toString(int number)
 
 /**
  * notValid - Checks if the exit status entered contains
- * natural numbers
+ * natural numbers, including zero
  *
  * @status: The status entered
  *
@@ -84,6 +84,11 @@ char *toString(int number)
 int notValid(const char *status)
 {
 	int i;
+	const char *excluding = "-0";
+
+
+	if (!strcmp(status, excluding))
+		return (0);
 
 	i = 0;
 	while (status[i])

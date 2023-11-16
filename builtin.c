@@ -17,27 +17,10 @@ int exit_command(char *cmd[], const char *program, int index)
 	{
 		int number = _atoi(cmd[1]);
 
-		if (notValid(cmd[1]) && number)
+		if (notValid(cmd[1]))
 		{
-			/* failed */
-			/* char *message = "Illegal number"; */
-			/* char *str; */
-
-			printf("%s: %d: exit: Illegal number: %s\n", program, index, cmd[1]);
-			/* write(STDOUT_FILENO, program, strlen(program)); */
-			/* str = toString(index); /\* convert to string *\/ */
-
-			/* write(STDOUT_FILENO, ": ", 2); */
-			/* write(STDOUT_FILENO, str, strlen(str)); */
-			/* free(str); */
-
-			/* write(STDOUT_FILENO, ": exit: ", 8); */
-			/* write(STDOUT_FILENO, message, strlen(message)); */
-
-			/* write(STDOUT_FILENO, ": ", 2); */
-
-			/* write(STDOUT_FILENO, cmd[1], strlen(cmd[1])); */
-			/* write(STDOUT_FILENO, "\n", 1); */
+			/* exit failed */
+			dprintf(STDERR_FILENO, "%s: %d: exit: Illegal number: %s\n", program, index, cmd[1]);
 
 			Mem_free_check(cmd);
 			return (EXIT_FAILURE);
