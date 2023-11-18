@@ -36,15 +36,6 @@ char **get_token(char *);
 void Mem_free_check(char **);
 
 char *_strdup(const char *);
-
-int _strcmp(char *, char *);
-
-int _strlen(char *);
-
-char *_strcat(char *, char *);
-
-char *_strcpy(char *, char *);
-
 int getTokenLength(char *, const char *);
 
 int exit_command(char *[], const char *, int);
@@ -63,12 +54,14 @@ char **get_token(char *input_line);
 
 void Mem_free_check(char **cmd);
 char *_strdup(const char *str);
-int _strcmp(char *s1, char *s2);
-int _strlen(char *s);
-char *_strcat(char *dest, char *src);
-char *_strcpy(char *dest, char *src);
+int _strcmp(const char *str1, const char *str2);
+int _strlen(const char *str);
+char *_strcat(char *dest, const char *src);
+char *_strcpy(char *dest, const char *src);
 char *_strend(const char *delm, int token_position);
 char *c_strtok(char *cpy, const char *delm);
+int _strncmp(const char *dest, char *source, int counter);
+
 
 /* path handling functions */
 void print_error(char *name, char *cmd, int index);
@@ -80,7 +73,9 @@ char *_getenv(char *var);
 int getNumLength(int number);
 
 int isBuiltin(const char *);
-
+/* setenv and unsetenv */
+int _setenv(const char *name, const char *val, int overwrite);
+int setenv_command(char **cmd, const char *program, int index);
 
 int notValid(const char *);
 char *toString(int);

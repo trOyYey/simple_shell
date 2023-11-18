@@ -140,7 +140,7 @@ void handle_exit_status(char **cmd, int externalStatus, int builtinStatus)
 int isBuiltin(const char *command)
 {
 	int i;
-	const char *builtin_cmd[] = {"exit", "env", NULL};
+	const char *builtin_cmd[] = {"exit", "env", "setenv", NULL};
 
 	i = 0;
 	while (builtin_cmd[i])

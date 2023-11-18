@@ -38,21 +38,15 @@ char *_strdup(const char *string)
  * Return: 1 if true, 0 if false
  */
 
-int _strcmp(char *s1, char *s2)
+int _strcmp(const char *str1, const char *str2)
 {
-	int totall = 0;
-
-	while (*s1)
+	while (*str1 && *str2 && *str1 == *str2)
 	{
-		if (*s1 != *s2)
-		{
-			totall = ((int)*s1 - 48) - ((int)*s2 - 48);
-			break;
-		}
-		s1++;
-		s2++;
+	str1++;
+	str2++;
 	}
-	return (totall);
+
+	return *(unsigned char *)str1 - *(unsigned char *)str2;
 }
 
 /**
@@ -62,37 +56,41 @@ int _strcmp(char *s1, char *s2)
  *
  * Return: Length of the string
  */
-int _strlen(char *s)
+int _strlen(const char *str)
 {
-	int counter;
-
-	for (counter = 0; *s != '\0'; s++)
-		++counter;
-
-	return (counter);
+	const char *s = str;
+	int length = 0;
+	while (*s)
+	{
+	length++;
+	s++;
+	}
+	return length;
 }
-
 /**
  * *_strcat - function that concatenates two strings
  * @dest: pointer to destination input
  * @src: source pointer
  * Return: pointer resulting of @dest
  */
-char *_strcat(char *dest, char *src)
+char *_strcat(char *dest, const char *src)
 {
-	int destL = 0;
-	int srcL = 0;
-	int i;
+	char *temp = dest;
 
-	for (i = 0; dest[i] != '\0'; i++)
-		destL++;
-	for (i = 0; src[i] != '\0'; i++)
-		srcL++;
+	while (*dest != '\0')
+	{
+	dest++;
+	}
 
-	for (i = 0; i <= srcL; i++)
-		dest[destL + i] = src[i];
-	return (dest);
+	while (*src != '\0')
+	{
+	*dest = *src;
+	dest++;
+	src++;
+	}
+    *dest = '\0';
 
+    return temp;
 }
 
 /**
@@ -103,15 +101,17 @@ char *_strcat(char *dest, char *src)
  *
  * Return: pointer to @dest
  */
-char *_strcpy(char *dest, char *src)
+char *_strcpy(char *dest, const char *src)
 {
-	int i = -1;
+	char *temp = dest;
 
-	do {
-		i++;
-		dest[i] = src[i];
-	}	while (src[i] != '\0');
+	while (*src != '\0')
+	{
+		*dest = *src;
+		dest++;
+		src++;
+	}
+	*dest = '\0';
 
-	return (dest);
+	return temp;
 }
-

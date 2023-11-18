@@ -53,6 +53,7 @@ int run_builtin(char **cmd, const char *program, int index, int externalStatus)
 	Command builtin_command[] = {
 		{"exit", exit_command},
 		{"env", env_command},
+		{"setenv", setenv_command},
 		{NULL, NULL}
 	};
 
