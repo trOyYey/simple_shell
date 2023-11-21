@@ -15,7 +15,7 @@ char *read_input(void)
 	if (isatty(STDIN_FILENO))
 		write(STDOUT_FILENO, "#cisfun$ ", 9);
 
-	n = getline(&Buffer, &size, stdin);
+	n = _getline(&Buffer, &size, stdin);
 
 	if (n == -1)
 	{

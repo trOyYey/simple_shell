@@ -115,17 +115,20 @@ int notValid(const char *status)
 void handle_exit_status(char **cmd, int externalStatus, int builtinStatus)
 {
 		/* Handled external status exit */
-		if (externalStatus > 0 && !strcmp(*cmd, "exit"))
+		if (builtinStatus != 127)
 		{
-			Mem_free_check(cmd);
-			exit(externalStatus);
-		}
+			if (externalStatus > 0 && !strcmp(*cmd, "exit"))
+			{
+				Mem_free_check(cmd);
+				exit(externalStatus);
+			}
 
-		/* Handle shell builtin status exit */
-		if (builtinStatus == 5 && !strcmp(*cmd, "exit"))
-		{
-			Mem_free_check(cmd);
-			exit(0);
+			/* Handle shell builtin status exit */
+			if (builtinStatus == 5 && !strcmp(*cmd, "exit"))
+			{
+				Mem_free_check(cmd);
+				exit(0);
+			}
 		}
 }
 

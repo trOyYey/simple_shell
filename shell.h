@@ -80,5 +80,19 @@ int setenv_command(char **cmd, const char *program, int index);
 int notValid(const char *);
 char *toString(int);
 
+ssize_t _getline(char **lineptr, size_t *n,
+				 FILE * stream);
+
+ssize_t handle_status(char **lineptr, ssize_t read_bytes,
+					 ssize_t bytes_read);
+
 void handle_exit_status(char **, int, int);
+
+ ssize_t readFromStdin(char **lineptr, size_t *n, int fd);
+
+int findNewLine(const char buf[], int position, short *status);
+
+ssize_t readFromStreams(char **lineptr, size_t *n, int fd);
+
+int handle_EOF(size_t bytes_read);
 #endif

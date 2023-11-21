@@ -23,6 +23,7 @@ int main(int ac, char **program)
 			/* handle non interactive mode and EOF condition */
 			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
+
 			return (status);
 		}
 		index++;
