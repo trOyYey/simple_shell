@@ -24,7 +24,7 @@ int exit_command(char *cmd[], const char *program, int index)
 				program, index, cmd[1]);
 
 			Mem_free_check(cmd);
-			return (127);
+			return (2);
 		}
 		Mem_free_check(cmd);
 		exit(number);

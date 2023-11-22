@@ -115,7 +115,7 @@ int notValid(const char *status)
 void handle_exit_status(char **cmd, int externalStatus, int builtinStatus)
 {
 		/* Handled external status exit */
-		if (builtinStatus != 127)
+		if (builtinStatus != 2)
 		{
 			if (externalStatus > 0 && !strcmp(*cmd, "exit"))
 			{
