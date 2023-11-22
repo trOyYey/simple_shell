@@ -74,7 +74,7 @@ int getNumLength(int number);
 
 int isBuiltin(const char *);
 /* setenv and unsetenv */
-int _setenv(const char *name, const char *val, int overwrite);
+char *_setenv(const char *name, const char *val, int overwrite);
 int setenv_command(char **cmd, const char *program, int index);
 
 int notValid(const char *);

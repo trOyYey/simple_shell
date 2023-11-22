@@ -34,7 +34,7 @@ char *toString(int number)
 {
 	char *num;
 	bool neg = false;
-	int i, length, temp;
+	int i, length;
 
 	length = getNumLength(number);
 	num = malloc(sizeof(char) * length + 1);
@@ -55,6 +55,7 @@ char *toString(int number)
 
 	for (i = (length - 1); i >= 0; i--)
 	{
+		int temp;
 		/* convert right most digit to letter */
 		if (neg && i == 0)
 		{

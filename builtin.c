@@ -65,6 +65,7 @@ int run_builtin(char **cmd, const char *program, int index, int externalStatus)
 			builtinStatus = builtin_command[i].exec_builtin(cmd, program, index);
 			handle_exit_status(cmd, externalStatus, builtinStatus);
 
+			Mem_free_check(cmd);
 			return (builtinStatus);
 		}
 		i++;
@@ -94,6 +95,6 @@ int env_command(char **cmd, const char *program, int index)
 		write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
 		write(STDOUT_FILENO, "\n", 1);
 	}
-	Mem_free_check(cmd);
+
 	return (0);
 }
