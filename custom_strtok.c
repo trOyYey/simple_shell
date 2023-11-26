@@ -8,7 +8,7 @@ char *c_strtok(char *cpy, const char *delm)
 	if (cpy != NULL)
 		token_buffer = cpy;
 	else if (token_buffer == NULL)
-		return NULL;
+		return (NULL);
 
 	tokenst = token_buffer;
 	while (*tokenst != '\0' && _strend(delm, *tokenst) != NULL)
@@ -16,7 +16,7 @@ char *c_strtok(char *cpy, const char *delm)
 	if (*tokenst == '\0')
 	{
 		token_buffer = NULL;
-		return NULL;
+		return (NULL);
 	}
 
 	tokend = tokenst;

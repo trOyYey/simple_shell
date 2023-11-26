@@ -48,10 +48,7 @@ char *toString(int number)
 
 	/* Memory allocating failed */
 	if (!num)
-	{
-		write(STDERR_FILENO, "malloc failed\n", 15);
-		exit(EXIT_FAILURE);
-	}
+		return (NULL);
 
 	for (i = (length - 1); i >= 0; i--)
 	{
@@ -97,7 +94,6 @@ int notValid(const char *status)
 		if (!(status[i] >= '0' && status[i] <= '9'))
 			return (1);
 		i++;
-
 	}
 
 	return (0);
@@ -115,22 +111,23 @@ int notValid(const char *status)
  */
 void handle_exit_status(char **cmd, int externalStatus, int builtinStatus)
 {
-		/* Handled external status exit */
-		if (builtinStatus != 2)
-		{
-			if (externalStatus > 0 && !strcmp(*cmd, "exit"))
-			{
-				Mem_free_check(cmd);
-				exit(externalStatus);
-			}
+	/* Handled external status exit */
 
-			/* Handle shell builtin status exit */
-			if (builtinStatus == 5 && !strcmp(*cmd, "exit"))
-			{
-				Mem_free_check(cmd);
-				exit(0);
-			}
+	if (builtinStatus != 2)
+	{
+		if (externalStatus > 0 && !strcmp(*cmd, "exit"))
+		{
+			Mem_free_check(cmd);
+			exit(externalStatus);
 		}
+
+		/* Handle shell builtin status exit */
+		if (builtinStatus == 5 && !strcmp(*cmd, "exit"))
+		{
+			Mem_free_check(cmd);
+			exit(0);
+		}
+	}
 }
 
 /**
@@ -144,7 +141,7 @@ void handle_exit_status(char **cmd, int externalStatus, int builtinStatus)
 int isBuiltin(const char *command)
 {
 	int i;
-	const char *builtin_cmd[] = {"exit", "env", "setenv", NULL};
+	const char *builtin_cmd[] = {"exit", "cd", "env", "setenv", NULL};
 
 	i = 0;
 	while (builtin_cmd[i])

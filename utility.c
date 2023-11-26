@@ -14,11 +14,9 @@ void Mem_free_check(char **cmd)
 	if (!cmd)
 		return;
 	for (i = 0; cmd[i]; i++)
-	{
 		free(cmd[i]);
-			cmd[i] = NULL;
-	}
-	free(cmd), cmd = NULL;
+
+	free(cmd);
 }
 
 /**

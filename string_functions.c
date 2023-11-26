@@ -32,8 +32,8 @@ char *_strdup(const char *string)
 /**
  * _strcmp - function that compares two strings
  *
- * @s1: first input
- * @s2: 2nd input
+ * @str1: first input
+ * @str2: 2nd input
  *
  * Return: 1 if true, 0 if false
  */
@@ -46,13 +46,13 @@ int _strcmp(const char *str1, const char *str2)
 	str2++;
 	}
 
-	return *(unsigned char *)str1 - *(unsigned char *)str2;
+	return (*(unsigned char *)str1 - *(unsigned char *)str2);
 }
 
 /**
  * _strlen - function that returns lenght of a string
  *
- *@s : input
+ *@str: input
  *
  * Return: Length of the string
  */
@@ -60,12 +60,13 @@ int _strlen(const char *str)
 {
 	const char *s = str;
 	int length = 0;
+
 	while (*s)
 	{
-	length++;
-	s++;
+		length++;
+		s++;
 	}
-	return length;
+	return (length);
 }
 /**
  * *_strcat - function that concatenates two strings
@@ -88,9 +89,9 @@ char *_strcat(char *dest, const char *src)
 	dest++;
 	src++;
 	}
-    *dest = '\0';
+	*dest = '\0';
 
-    return temp;
+	return (temp);
 }
 
 /**
@@ -113,5 +114,5 @@ char *_strcpy(char *dest, const char *src)
 	}
 	*dest = '\0';
 
-	return temp;
+	return (temp);
 }
