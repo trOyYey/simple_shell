@@ -20,7 +20,7 @@ int main(int ac, char **program)
 		input = read_input();
 		if (input == NULL)
 		{
-			/* handle non interactive mode and EOF condition */
+			/* Handle non interactive mode and EOF condition */
 			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
 
@@ -31,10 +31,15 @@ int main(int ac, char **program)
 		if (!cmd)
 			continue;
 
+		parseDollarSign(cmd); /* Expand environment variables */
+
+		/* Execute command */
 		if (isBuiltin(*cmd))
-			/* executes builtin command */
-			status = run_builtin(cmd, *program, index, status);
+			status = run_builtin(cmd, *program, index, status); /* builtins */
 		else
-			status = run_execve(cmd, *program, index); /* execute external program */
+			status = run_execve(cmd, *program, index); /* External program */
+
+
+		cmd = NULL;
 	}
 }

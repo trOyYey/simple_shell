@@ -10,7 +10,7 @@
  * Return: exit status if the function fails
  * otherwise exit
  */
-int exit_command(char *cmd[], const char *program, int index)
+int exit_command(char **cmd, const char *program, int index)
 {
 	/* Contains exit status */
 	if (cmd[1])
@@ -23,7 +23,6 @@ int exit_command(char *cmd[], const char *program, int index)
 			dprintf(STDERR_FILENO, "%s: %d: exit: Illegal number: %s\n",
 				program, index, cmd[1]);
 
-			Mem_free_check(cmd);
 			return (2);
 		}
 		Mem_free_check(cmd);
@@ -52,8 +51,9 @@ int run_builtin(char **cmd, const char *program, int index, int externalStatus)
 	/* map command name to it function */
 	Command builtin_command[] = {
 		{"exit", exit_command},
-		{"env", env_command},
 		{"setenv", setenv_command},
+		{"cd", cd_command},
+		{"env", env_command},
 		{NULL, NULL}
 	};
 
@@ -69,6 +69,7 @@ int run_builtin(char **cmd, const char *program, int index, int externalStatus)
 			return (builtinStatus);
 		}
 		i++;
+
 	}
 	return (0);
 }
@@ -89,6 +90,7 @@ int env_command(char **cmd, const char *program, int index)
 	/* unused */
 	(void)program;
 	(void)index;
+	(void)cmd;
 
 	for (i = 0; environ[i]; i++)
 	{
@@ -97,4 +99,98 @@ int env_command(char **cmd, const char *program, int index)
 	}
 
 	return (0);
+}
+
+/**
+ * cd_command - Change the working directory
+ *
+ * @cmd: The tokenized command
+ * @program: The name of the program current running
+ * @index: The index of the command
+ *
+ * Return: 0 on success and 2 on failure
+ */
+int cd_command(char **cmd, const char *program, int index)
+{
+	char *buf;
+	static char *pwd;
+	char *env = "OLDPWD";
+
+	pwd = _getenv("PWD");
+	/* When no argument is passed default to HOME */
+	if (!cmd[1])
+		cmd[1] = _getenv("HOME");
+	else if (!strcmp(cmd[1], "-")) /* Handles previous directory */
+		cmd[1] = _getenv(env);
+
+	if (setenv(env, pwd, 1) == -1) /* Previous directory */
+	{
+		free(pwd);
+		return (2);
+	}
+	/* Change working directory */
+	if (chdir(cmd[1]) == -1)
+	{
+		dprintf(STDERR_FILENO, "%s: %d: cd: can't cd to directory %s\n",
+				program, index, cmd[1]);
+		free(pwd);
+		return (2);
+	}
+
+	/* Update parent working directory */
+	buf = _getcwd();
+	if (!buf)
+	{
+		free(pwd);
+		return (2);
+	}
+	if (setenv("PWD", buf, 1) == -1)
+	{
+		free(buf), free(pwd);
+		return (2);
+	}
+	free(pwd), free(buf);
+
+	return (0); /* success */
+}
+
+/**
+ * _getcwd - Gets the current working directory
+ *
+ * Return: A pointer to the current working directory, NULL
+ * if it fails
+ */
+char *_getcwd(void)
+{
+	int n;
+	char *buf, *temp;
+
+	n = 25;
+	buf = malloc(sizeof(char) * n);
+
+	if (!buf)
+		return (NULL);
+
+	/* Not enough size to store path so increment */
+	while (!getcwd(buf, n))
+	{
+		n *= 2;
+		temp = realloc(buf, sizeof(char) * n);
+
+		if (!temp)
+		{
+			free(buf);
+			return (NULL);
+		}
+
+		buf = temp;
+	}
+	/* Perfect size to store path in buf */
+	if (!getcwd(buf, n))
+	{
+		free(buf);
+		return (NULL);
+	}
+
+	return (buf);
 }
